@@ -21,13 +21,18 @@ const History = () => {
   const [transactionData, settransactionData] = useState();
   const navigate = useNavigate();
   useEffect(async () => {
-    axios.get(`/history/pages/${params.get("page")}`, header).then(res => {
-      if (res.status === 201) {
-        settransactionData(res.data);
-      } else {
-        navigate("/login");
-      }
-    });
+    axios
+      .get(
+        `/history/pages/${params.get("page") ? params.get("page") : 1}`,
+        header
+      )
+      .then(res => {
+        if (res.status === 201) {
+          settransactionData(res.data);
+        } else {
+          navigate("/login");
+        }
+      });
   }, [params]);
   const getHistory = () => {
     if (transactionData) {

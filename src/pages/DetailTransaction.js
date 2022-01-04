@@ -30,7 +30,7 @@ const DetailTransaction = () => {
     await axios
       .get(`/transaction/${username2}`, header)
       .then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.status === 201) {
           setuserData(res.data);
         }
@@ -73,7 +73,7 @@ const DetailTransaction = () => {
                   className="d-flex flex-column align-items-center py-3 px-1 position-relative"
                   style={{ width: "30rem" }}
                 >
-                  <Link to={"/"} className="align-self-start ms-4">
+                  <Link to={"/transaction"} className="align-self-start ms-4">
                     <img
                       src={back}
                       alt="back"

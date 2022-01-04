@@ -1,19 +1,17 @@
 import React, { useEffect } from "react";
 import { Link, Navigate } from "react-router-dom";
 import styled from "styled-components";
-import Header from "../components/Header";
+const ContentStyle = styled.div`
+  .container-size {
+    min-height: 100%; /* Fallback for browsers do NOT support vh unit */
+    min-height: 100vh; /* These two lines are counted as one :-)       */
+
+    min-height: calc(100% - 62px); /*  */
+    min-height: calc(100vh - 62px); /* */
+  }
+`;
 
 const LandingPage = () => {
-  const ContentStyle = styled.div`
-    .container-size {
-      min-height: 100%; /* Fallback for browsers do NOT support vh unit */
-      min-height: 100vh; /* These two lines are counted as one :-)       */
-
-      min-height: calc(100% - 62px); /*  */
-      min-height: calc(100vh - 62px); /* */
-    }
-  `;
-
   if (localStorage.getItem("token")) {
     return <Navigate to={"/transaction"} />;
   }

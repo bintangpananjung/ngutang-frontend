@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Header from "../components/Header";
 import Style from "../styles/Style";
 import profpic from "../assets/profile.png";
-import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { auth } from "../auth/auth";
 import Autocomplete from "../components/Autocomplete";
@@ -11,6 +10,7 @@ import { lastupdated, messageutang } from "../helper/transaction_helper";
 import closeicon from "../assets/close.png";
 import ConfModalStyle from "../styles/ConfModalStyle";
 import CardStyle from "../styles/CardStyle";
+import Pagination from "../components/Pagination";
 
 const Transaction = () => {
   // header authorization
@@ -34,22 +34,28 @@ const Transaction = () => {
   const [submitted, setsubmitted] = useState(false);
   const [lunas, setlunas] = useState(false);
   const [tagih, settagih] = useState(false);
+  const [params, setparams] = useSearchParams();
 
   //navigating
   const navigate = useNavigate();
 
   //hook fetch
   useEffect(async () => {
-    await axios.get("/transaction", header).then(res => {
-      // console.log(res.data);
-      if (res.status === 201) {
-        settransactionData(res.data);
-        setpuredata(res.data);
-      } else {
-        navigate("/login");
-      }
-    });
-  }, [updated]);
+    await axios
+      .get(
+        `/transaction/pages/${params.get("page") ? params.get("page") : 1}`,
+        header
+      )
+      .then(res => {
+        // console.log(res.data);
+        if (res.status === 201) {
+          settransactionData(res.data);
+          setpuredata(res.data);
+        } else {
+          navigate("/login");
+        }
+      });
+  }, [updated, params]);
 
   useEffect(() => {
     axios.get("/member", header).then(res => {
@@ -65,12 +71,13 @@ const Transaction = () => {
   //hook re-render
   useEffect(() => {
     if (puredata) {
-      settransactionData(
-        puredata.filter(user => {
+      settransactionData({
+        maxPage: puredata.maxPage,
+        data: puredata.data.filter(user => {
           const regex = new RegExp(`${search}`);
           return user.username2.match(regex);
-        })
-      );
+        }),
+      });
     }
   }, [search]);
 
@@ -152,8 +159,8 @@ const Transaction = () => {
   //support re-render function
   const getTransaction = () => {
     if (transactionData) {
-      if (transactionData.length > 0) {
-        return transactionData.map((val, index) => {
+      if (transactionData.data.length > 0) {
+        return transactionData.data.map((val, index) => {
           return (
             <div
               className={
@@ -295,6 +302,7 @@ const Transaction = () => {
             onClick={e => {
               setaddstate(false);
               setconf(false);
+              setsubmitted(false);
             }}
           >
             OK
@@ -581,6 +589,18 @@ const Transaction = () => {
                 {getTransaction()}
               </div>
             </div>
+            {transactionData ? (
+              transactionData.maxPage > 1 ? (
+                <Pagination
+                  transactionData={transactionData}
+                  page={params.get("page") ? params.get("page") : 1}
+                />
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
           </div>
           <>
             <div

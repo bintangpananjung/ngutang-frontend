@@ -85,10 +85,14 @@ const History = () => {
               {getHistory()}
             </div>
             {transactionData ? (
-              <Pagination
-                transactionData={transactionData}
-                page={params.get("page") ? params.get("page") : 1}
-              />
+              transactionData.maxPage > 1 ? (
+                <Pagination
+                  transactionData={transactionData}
+                  page={params.get("page") ? params.get("page") : 1}
+                />
+              ) : (
+                ""
+              )
             ) : (
               ""
             )}

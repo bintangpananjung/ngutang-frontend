@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 
 const Pagination = props => {
   const pager = (maxPage, page) => {
+    maxPage = parseInt(maxPage);
+    page = parseInt(page);
     var item = [];
-    var pagecount;
-    var init;
+    var pagecount = maxPage;
+    var init = 0;
     if (maxPage >= 5) {
       if (maxPage - page >= 4) {
         pagecount = page + 4;
@@ -16,11 +18,7 @@ const Pagination = props => {
           init = maxPage - 5;
         }
       }
-    } else {
-      pagecount = maxPage;
-      init = 0;
     }
-
     for (let i = init; i < pagecount; i++) {
       item.push(
         <li className="page-item" key={i}>
@@ -40,7 +38,7 @@ const Pagination = props => {
   };
   return (
     <>
-      {console.log(props)}
+      {/* {console.log(props)} */}
       <nav aria-label="Page navigation example">
         <ul className="pagination justify-content-center">
           <li className="page-item disabled">

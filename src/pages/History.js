@@ -21,14 +21,14 @@ const History = () => {
   const [transactionData, settransactionData] = useState();
   const navigate = useNavigate();
   useEffect(async () => {
-    axios.get("/history/pages/2", header).then(res => {
+    axios.get(`/history/pages/${params.get("page")}`, header).then(res => {
       if (res.status === 201) {
         settransactionData(res.data);
       } else {
         navigate("/login");
       }
     });
-  }, []);
+  }, [params]);
   const getHistory = () => {
     if (transactionData) {
       return transactionData.data.map((val, index) => {
@@ -82,7 +82,7 @@ const History = () => {
             {transactionData ? (
               <Pagination
                 transactionData={transactionData}
-                page={params.get("page")}
+                page={params.get("page") ? params.get("page") : 1}
               />
             ) : (
               ""

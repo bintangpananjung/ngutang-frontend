@@ -167,6 +167,9 @@ const Style = styled.div`
     border: 1px solid #28584e;
     color: #28584e;
   }
+  .pagination-item:focus {
+    box-shadow: none;
+  }
   .pagination-item:hover,
   .pagination-item.active {
     background-color: #3e8e7e !important;

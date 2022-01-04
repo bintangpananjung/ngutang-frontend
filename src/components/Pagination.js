@@ -41,16 +41,33 @@ const Pagination = props => {
       {/* {console.log(props)} */}
       <nav aria-label="Page navigation example">
         <ul className="pagination justify-content-center">
-          <li className="page-item disabled">
-            <a className="page-link pagination-item disabled" href="#">
+          <li className={"page-item" + (props.page == 1 ? " disabled" : "")}>
+            <Link
+              className={
+                "page-link pagination-item" +
+                (props.page == 1 ? " disabled" : "")
+              }
+              to={`?page=${parseInt(props.page) - 1}`}
+            >
               Previous
-            </a>
+            </Link>
           </li>
           {pager(props.transactionData.maxPage, props.page)}
-          <li className="page-item">
-            <a className="page-link pagination-item" href="#">
+          <li
+            className={
+              "page-item" +
+              (props.page == props.transactionData.maxPage ? " disabled" : "")
+            }
+          >
+            <Link
+              className={
+                "page-link pagination-item" +
+                (props.page == props.transactionData.maxPage ? " disabled" : "")
+              }
+              to={`?page=${parseInt(props.page) + 1}`}
+            >
               Next
-            </a>
+            </Link>
           </li>
         </ul>
       </nav>

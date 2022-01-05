@@ -5,6 +5,7 @@ import {
   useNavigate,
   NavigationType,
   Navigate,
+  useSearchParams,
 } from "react-router-dom";
 import Header from "../components/Header";
 import CardStyle from "../styles/CardStyle";
@@ -18,13 +19,14 @@ import {
   lastupdated,
   profileMessageStatus,
 } from "../helper/transaction_helper";
+import Pagination from "../components/Pagination";
 
 const DetailTransaction = () => {
   const username2 = useParams()["user"];
   const header = auth();
   const [userData, setuserData] = useState();
   const [transactionData, settransactionData] = useState();
-  // const [redirect, setredirect] = useState(false);
+  const [params, setparams] = useSearchParams();
   const navigate = useNavigate();
   useEffect(async () => {
     await axios
@@ -37,23 +39,30 @@ const DetailTransaction = () => {
       })
       .catch(error => {
         if (error.response.status === 400) {
-          navigate("/");
+          navigate("/transaction");
         }
       });
   }, []);
 
   useEffect(async () => {
     await axios
-      .get(`/history/${username2}`, header)
+      .get(
+        `/history/${username2}?pages=${
+          params.get("page") ? params.get("page") : 1
+        }`,
+        header
+      )
       .then(res => {
         if (res.status === 201) {
           settransactionData(res.data);
         }
       })
       .catch(error => {
-        console.log(error.response.status);
+        if (error.response.status === 400) {
+          navigate("/transaction");
+        }
       });
-  }, []);
+  }, [params]);
   // if (redirect) {
   //   return <Navigate to={"/"} />;
   // }
@@ -112,14 +121,29 @@ const DetailTransaction = () => {
                   className="d-flex flex-column bg-palette-1 card-container py-3 px-4"
                   style={{ width: "100%", height: "100%" }}
                 >
-                  <p
-                    className="mb-0 palette-4 font-head"
-                    style={{ fontSize: "1.3rem" }}
-                  >
-                    Riwayat Utang
-                  </p>
+                  <div className="d-flex">
+                    <p
+                      className="mb-0 palette-4 font-head me-auto"
+                      style={{ fontSize: "1.3rem" }}
+                    >
+                      Riwayat Utang
+                    </p>
+                    {transactionData ? (
+                      transactionData.maxPage > 1 ? (
+                        <Pagination
+                          transactionData={transactionData}
+                          page={params.get("page") ? params.get("page") : 1}
+                        />
+                      ) : (
+                        ""
+                      )
+                    ) : (
+                      ""
+                    )}
+                  </div>
+
                   <div className="scroll-container my-3 pe-1">
-                    {getHistory(transactionData)}
+                    {transactionData ? getHistory(transactionData.data) : ""}
                   </div>
                 </div>
               </div>
